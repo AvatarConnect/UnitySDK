@@ -8,4 +8,4 @@ TODO.
 
 # License
 
-TODO.
+MIT (http://opensource.org/licenses/MIT)
