@@ -9,6 +9,7 @@ namespace AvatarConnect
     }
 
     // Avatar metadata header json recived by the server
+    [System.Serializable]
     public class AvatarRequest
     {
         // type - What avatar provider this is the avatar of
@@ -18,6 +19,7 @@ namespace AvatarConnect
     }
 
     // Avatar metadata json recived by the server
+    [System.Serializable]
     public class Metadata
     {
         public string type;

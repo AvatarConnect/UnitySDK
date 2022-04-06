@@ -1,26 +1,30 @@
 // AvatarConnect Unity SDK - By MoNA Gallery, Inc. and It's Open Source Contributors.
 
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace AvatarConnect
 {
-    // Global module registry.
-    public static AvatarConnectModule[] ModuleRegistry = {
-        new ReadyPlayerMe.ReadyPlayerMeModule(),
-        new Meebits.MeebitsModule()
-    };
-
     // Main Avatar Connect class
     // Use this class to call the modules
     public static class AvatarConnect
     {
+        // Global module registry.
+        public static AvatarConnectModule[] GetModuleRegistry()
+        {
+            return new AvatarConnectModule[]{
+                new ReadyPlayerMe.ReadyPlayerMeModule(),
+                new Meebits.MeebitsModule()
+            };
+        }
+
         // If AvatarConnect is ready to use
         public static bool ServiceInitialized = false;
 
-        public List<AvatarConnectModule> ActiveModules;
+        public static List<AvatarConnectModule> ActiveModules;
 
         // Required startup call, returns true if service is ok.
-        public bool Initialize(AvatarConnectModule[] avatarConnectModules)
+        public static bool Initialize(AvatarConnectModule[] avatarConnectModules)
         {
             if (ServiceInitialized) return true;
 
@@ -33,7 +37,7 @@ namespace AvatarConnect
         {
             if (!ServiceInitialized) return;
 
-            ActivateModules(ModuleRegistry());
+            ActivateModules(GetModuleRegistry());
         }
 
         // Activate specific modules
@@ -60,7 +64,7 @@ namespace AvatarConnect
         {
             if (!ServiceInitialized) return;
 
-            AvatarRequest request = JsonManager.Deserialize<AvatarRequest>(metadata);
+            AvatarRequest request = JsonUtility.FromJson<AvatarRequest>(metadata);
 
             if (request == null)
             {
