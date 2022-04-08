@@ -7,7 +7,7 @@ namespace AvatarConnect
 {
     // Main Avatar Connect class
     // Use this class to call the modules
-    public static class AvatarConnect
+    public static class Core
     {
         // Global module registry.
         public static AvatarConnectModule[] GetModuleRegistry()
@@ -20,19 +20,37 @@ namespace AvatarConnect
 
         // If AvatarConnect is ready to use
         public static bool ServiceInitialized = false;
-
         public static List<AvatarConnectModule> ActiveModules;
 
+        // Considered temporary.
+        public static GameObject AvatarObject;
+
         // Required startup call, returns true if service is ok.
-        public static bool Initialize(AvatarConnectModule[] avatarConnectModules)
+        public static bool Initialize()
         {
             if (ServiceInitialized) return true;
 
+            // Check if the unity client has internet access
+            if (Application.internetReachability == NetworkReachability.NotReachable)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.SERVICE_CONNECT_ERROR);
+                return false;
+            }
+
+            // Create fallback object if not AvatarObject is found.
+            if (AvatarObject == null)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.CONSUMER_CHARACTER_NOT_SET);
+                AvatarObject = new GameObject("Avatar");
+            }
+
             ActiveModules = new List<AvatarConnectModule>();
+            ServiceInitialized = true;
 
             return true;
         }
 
+        // Activate all modules
         public static void ActivateAllModules()
         {
             if (!ServiceInitialized) return;
@@ -68,30 +86,29 @@ namespace AvatarConnect
 
             if (request == null)
             {
-                Debug.LogError("AvatarConnect: Failed to deserialize metadata");
-                ManageModuleError(null, new AvatarConnectResult() { Success = false, Error = AvatarConnectError.SERVICE_JSON_FAIL });
+                AvatarConnectError.Fail(AvatarConnectError.SERVICE_JSON_FAIL);
                 return;
             }
 
-            // TODO: Remove.
-            Debug.Log("AvatarConnect: Received Metadata");
-            Debug.Log(request.type);
-            Debug.Log(request.metadata.type);
-            Debug.Log(request.metadata.metadataUri);
-            Debug.Log(request.metadata.extension);
-            Debug.Log(request.metadata.avatarUri);
-            Debug.Log(request.metadata.imageUrl);
-            Debug.Log(request.metadata.ownerDownloadVox);
-            Debug.Log(request.metadata.ownerDownloadVoxTPose);
-            Debug.Log(request.metadata.ownerDownloadVoxTPoseCored);
-            Debug.Log(request.metadata.ownerDownloadVox3DPrint);
-            Debug.Log(request.metadata.ownerDownloadVRM);
-            Debug.Log(request.metadata.ownerDownloadFBX);
-            Debug.Log(request.metadata.ownerDownloadGLB);
+            AvatarConnectModule module = GetModule(request.type);
+
+            if (module == null)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.MODULE_NOT_FOUND);
+                return;
+            }
+
+            if (!module.ModuleInitialized)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.MODULE_UNINITIALIZED);
+                return;
+            }
+
+            AvatarConnectResult result = module.RequestAvatar(AvatarObject);
 
         }
 
-        // Manage module error
+        // Endpoint for all internal & external errors
         public static void ManageModuleError(AvatarConnectModule module, AvatarConnectResult error)
         {
             if (!error.Success) return;
@@ -99,8 +116,28 @@ namespace AvatarConnect
             // Assume this is a internal error
             if (module == null)
             {
-
+                // TODO
+                Debug.LogError("AvatarConnect [Internal]: " + error.Error);
+                return;
             }
+
+            Debug.LogError("AvatarConnect [Module " + module.ModuleName + "]: " + error.Error);
+        }
+
+        // Get partner module by name, returns null if not found.
+        public static AvatarConnectModule GetModule(string moduleName)
+        {
+            if (!ServiceInitialized || ActiveModules == null) return null;
+
+            foreach (AvatarConnectModule module in ActiveModules)
+            {
+                if (module.ModuleName == moduleName)
+                {
+                    return module;
+                }
+            }
+
+            return null;
         }
     }
 

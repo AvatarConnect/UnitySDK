@@ -6,10 +6,10 @@ namespace AvatarConnect
     public class AvatarConnectModule
     {
         // If the module is ready
-        public static bool ModuleInitialized;
+        public bool ModuleInitialized;
 
         // Metadata name of the module
-        public static string ModuleName;
+        public string ModuleName;
 
         // Latest Metadata recived from the server
         public Metadata AvatarMetadata;
