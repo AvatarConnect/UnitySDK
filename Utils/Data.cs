@@ -19,27 +19,20 @@ namespace AvatarConnect
     public class AvatarRequest
     {
         // type - What avatar provider this is the avatar of
-        public string type;
-        public Metadata metadata;
-
+        public string provider;
+        public AvatarInfo avatar;
+        public string metadata;
     }
 
-    // Avatar metadata json recived by the server
     [System.Serializable]
-    public class Metadata
+    public class AvatarInfo
     {
         public string type;
-        public string metadataUri;
-        public string extension;
-        public string avatarUri;
-        public string imageUrl;
-
-        public string ownerDownloadVox;
-        public string ownerDownloadVoxTPose;
-        public string ownerDownloadVoxTPoseCored;
-        public string ownerDownloadVox3DPrint;
-        public string ownerDownloadVRM;
-        public string ownerDownloadFBX;
-        public string ownerDownloadGLB;
+        public string uri;
     }
+
+    // Inhered from this base class to get the Provider specific metadata
+    [System.Serializable]
+    public class ProviderMetadata { }
+
 }

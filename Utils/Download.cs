@@ -16,7 +16,7 @@ namespace AvatarConnect
         }
 
         // Request downloads, returns the downloadHandler.
-        public static async Task<AvatarConnectResult> Download(string url)
+        public static AvatarConnectResult Download(string url)
         {
             if (!IsValidUrl(url))
             {
@@ -34,16 +34,19 @@ namespace AvatarConnect
             UnityWebRequest request = UnityWebRequest.Get(url);
 
             // Send the request
-            var download = request.SendWebRequest();
+            request.SendWebRequest();
 
             // Wait for the request to complete
-            while (!download.isDone)
+            while (!request.isDone)
             {
-                await Task.Yield();
+                Task.Delay(1);
             }
 
             // Check for errors
-            if (request.isNetworkError || request.isHttpError)
+            if (request.result != UnityWebRequest.Result.Success ||
+                request.result == UnityWebRequest.Result.ConnectionError ||
+                request.result == UnityWebRequest.Result.ProtocolError ||
+                request.result == UnityWebRequest.Result.DataProcessingError)
             {
                 // Flag failure
                 AvatarConnectError.Fail(AvatarConnectError.MODULE_RESOURCE_DOWNLOAD_FAIL);
@@ -61,7 +64,7 @@ namespace AvatarConnect
             return new AvatarConnectResult()
             {
                 Success = true,
-                OperationResult = request.downloadHandler,
+                OperationResult = request.downloadHandler.data,
                 Error = null
             };
         }

@@ -2,6 +2,8 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
+using System.Threading.Tasks;
 
 namespace AvatarConnect
 {
@@ -14,7 +16,8 @@ namespace AvatarConnect
         {
             return new AvatarConnectModule[]{
                 new ReadyPlayerMe.ReadyPlayerMeModule(),
-                new Meebits.MeebitsModule()
+                new Meebits.MeebitsModule(),
+                new CryptoAvatars.CryptoAvatarsModule()
             };
         }
 
@@ -24,6 +27,8 @@ namespace AvatarConnect
 
         // Considered temporary.
         public static GameObject AvatarObject;
+        public static StaticRoutine StaticRoutine;
+        public static string[] SupportedAvatarExtensions = { "glb", "vrm" };
 
         // Required startup call, returns true if service is ok.
         public static bool Initialize()
@@ -37,14 +42,19 @@ namespace AvatarConnect
                 return false;
             }
 
-            // Create fallback object if not AvatarObject is found.
+            // Create fallback object if not AvatarObject is set.
             if (AvatarObject == null)
             {
                 AvatarConnectError.Fail(AvatarConnectError.CONSUMER_CHARACTER_NOT_SET);
                 AvatarObject = new GameObject("Avatar");
             }
 
+            StaticRoutine = AvatarObject.AddComponent<StaticRoutine>();
             ActiveModules = new List<AvatarConnectModule>();
+
+            // Force add support for generic modules.
+            ActiveModules.Add(new GenericModule());
+
             ServiceInitialized = true;
 
             return true;
@@ -84,13 +94,13 @@ namespace AvatarConnect
 
             AvatarRequest request = JsonUtility.FromJson<AvatarRequest>(metadata);
 
-            if (request == null)
+            if (request == null || request.avatar == null)
             {
                 AvatarConnectError.Fail(AvatarConnectError.SERVICE_JSON_FAIL);
                 return;
             }
 
-            AvatarConnectModule module = GetModule(request.type);
+            AvatarConnectModule module = GetModule(request.provider);
 
             if (module == null)
             {
@@ -100,18 +110,23 @@ namespace AvatarConnect
 
             if (!module.ModuleInitialized)
             {
-                AvatarConnectError.Fail(AvatarConnectError.MODULE_UNINITIALIZED);
+                AvatarConnectError.Fail(AvatarConnectError.MODULE_UNINITIALIZED, module);
                 return;
             }
 
-            AvatarConnectResult result = module.RequestAvatar(AvatarObject);
+            if (module.AvatarMetadata == null)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.MODULE_UNSET_METADATA, module);
+                return;
+            }
 
+            module.RequestAvatar(AvatarObject, request);
         }
 
         // Endpoint for all internal & external errors
         public static void ManageModuleError(AvatarConnectModule module, AvatarConnectResult error)
         {
-            if (!error.Success) return;
+            if (error.Success) return;
 
             // Assume this is a internal error
             if (module == null)
@@ -121,7 +136,7 @@ namespace AvatarConnect
                 return;
             }
 
-            Debug.LogError("AvatarConnect [Module " + module.ModuleName + "]: " + error.Error);
+            Debug.LogError("AvatarConnect " + module.ModuleName + " : " + error.Error);
         }
 
         // Get partner module by name, returns null if not found.

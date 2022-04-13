@@ -1,0 +1,6 @@
+[submodule "ThirdParty/UniVRM"]
+	path = ThirdParty/UniVRM
+	url = https://github.com/vrm-c/UniVRM
+[submodule "ThirdParty/MToon"]
+	path = ThirdParty/MToon
+	url = https://github.com/Santarh/MToon

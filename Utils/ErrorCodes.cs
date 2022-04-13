@@ -12,7 +12,9 @@ namespace AvatarConnect
         // Module errors
         public static string MODULE_NOT_FOUND = "module.not.found";
         public static string MODULE_UNINITIALIZED = "module.uninitialized";
+        public static string MODULE_UNSET_METADATA = "module.unset.metadata";
         public static string MODULE_RESOURCE_DOWNLOAD_FAIL = "module.resource.download.fail";
+        public static string MODULE_RESOURCE_PARSE_FAIL = "module.resource.parse.fail";
 
         // Consumer errors
         public static string CONSUMER_CHARACTER_NOT_SET = "consumer.character.not.set";

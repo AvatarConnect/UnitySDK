@@ -5,14 +5,18 @@ using AvatarConnect;
 
 public class AvatarConnectExample : MonoBehaviour
 {
+    public GameObject avatarTarget;
+
     void Start()
     {
-        // Create host object for the avatar
-        GameObject avatar = new GameObject("Avatar");
-        avatar.transform.parent = transform;
+        if (avatarTarget == null)
+        {
+            Debug.LogError("AvatarConnectExample: avatarTarget is null");
+            return;
+        }
 
         // Apply host
-        AvatarConnect.Core.AvatarObject = avatar;
+        AvatarConnect.Core.AvatarObject = avatarTarget;
 
         // Initialize AvatarConnect
         AvatarConnect.Core.Initialize();
@@ -20,8 +24,7 @@ public class AvatarConnectExample : MonoBehaviour
         // Activate all modules
         AvatarConnect.Core.ActivateAllModules();
 
-        // Packet served by the Avatar connect service
-        string avatarPacket = "";
+        string avatarPacket = ""; // (*Testing only*) Left blank for example, fill this with your avatar packet
 
         // Process the metadata packet
         AvatarConnect.Core.ReceiveMetadata(avatarPacket);
