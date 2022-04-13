@@ -3,6 +3,8 @@ Implementation of runtime NFT character loading for Unity games and social platf
 
 Learn more about AvatarConnect http://avatarconnect.org/
 
+# Using the SDK
+Required Unity Packages `com.unity.nuget.newtonsoft-json`
 
 # Implement your project into AvatarConnect
 
