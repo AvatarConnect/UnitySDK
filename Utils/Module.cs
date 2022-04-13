@@ -78,7 +78,12 @@ namespace AvatarConnect
                         instance.EnableUpdateWhenOffscreen();
                         instance.ShowMeshes();
                     }
+
                     glb_data.Dispose();
+                    break;
+
+                default:
+                    AvatarConnectError.Fail(AvatarConnectError.CONSUMER_UNSUPPORTED_AVATAR_FORMAT, this);
                     break;
             }
         }

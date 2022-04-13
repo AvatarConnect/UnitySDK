@@ -18,6 +18,7 @@ namespace AvatarConnect
 
         // Consumer errors
         public static string CONSUMER_CHARACTER_NOT_SET = "consumer.character.not.set";
+        public static string CONSUMER_UNSUPPORTED_AVATAR_FORMAT = "consumer.unsupported.format";
 
         // Utility function to flag a failure
         public static void Fail(string error, AvatarConnectModule module = null)
