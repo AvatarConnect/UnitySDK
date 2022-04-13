@@ -27,7 +27,6 @@ namespace AvatarConnect
 
         // Considered temporary.
         public static GameObject AvatarObject;
-        public static StaticRoutine StaticRoutine;
         public static string[] SupportedAvatarExtensions = { "glb", "vrm" };
 
         // Required startup call, returns true if service is ok.
@@ -49,7 +48,6 @@ namespace AvatarConnect
                 AvatarObject = new GameObject("Avatar");
             }
 
-            StaticRoutine = AvatarObject.AddComponent<StaticRoutine>();
             ActiveModules = new List<AvatarConnectModule>();
 
             // Force add support for generic modules.
