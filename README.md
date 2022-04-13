@@ -1,10 +1,8 @@
 # AvatarConnect Unity SDK
+Implementation of runtime NFT character loading for Unity games and social platforms; currently, GLTF & VRM 3D model formats are supported. 
 
-TODO.
+Learn more about AvatarConnect http://avatarconnect.org/
 
-# Integrate AvatarConnect into your project
-
-TODO.
 
 # Implement your project into AvatarConnect
 
