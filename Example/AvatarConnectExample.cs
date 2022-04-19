@@ -9,6 +9,9 @@ public class AvatarConnectExample : MonoBehaviour
 
     void Start()
     {
+        // Force TXAA
+        QualitySettings.antiAliasing = 8;
+
         if (avatarTarget == null)
         {
             Debug.LogError("AvatarConnectExample: avatarTarget is null");
@@ -24,9 +27,13 @@ public class AvatarConnectExample : MonoBehaviour
         // Activate all modules
         AvatarConnect.Core.ActivateAllModules();
 
-        string avatarPacket = ""; // (*Testing only*) Left blank for example, fill this with your avatar packet
+        // Packet served by the Avatar connect service
+
+        // string avatarPacket = "{\"provider\": \"ready-player-me\", \"avatar\": {\"format\": \"glb\",\"uri\": \"https://xxxxxxxxxxxxxx.cloudfront.net/xxxxxxxxxxxxxxxxxxxxxxxxxx.glb?v=83685\", \"type\": \"humanoid\"}, \"metadata\": {\"bodyType\": \"fullbody\",\"outfitGender\": \"xxxxxxxxx\"}}";
+
+
 
         // Process the metadata packet
-        AvatarConnect.Core.ReceiveMetadata(avatarPacket);
+        // AvatarConnect.Core.ReceiveMetadata(avatarPacket);
     }
 }

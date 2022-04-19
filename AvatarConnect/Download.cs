@@ -16,7 +16,7 @@ namespace AvatarConnect
         }
 
         // Request downloads, returns the downloadHandler.
-        public static AvatarConnectResult Download(string url)
+        public static async Task<AvatarConnectResult> Download(string url)
         {
             if (!IsValidUrl(url))
             {
@@ -39,7 +39,7 @@ namespace AvatarConnect
             // Wait for the request to complete
             while (!request.isDone)
             {
-                Task.Delay(1);
+                await Task.Yield();
             }
 
             // Check for errors

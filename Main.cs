@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
 
 namespace AvatarConnect
 {
@@ -24,15 +25,19 @@ namespace AvatarConnect
         // If AvatarConnect is ready to use
         public static bool ServiceInitialized = false;
         public static List<AvatarConnectModule> ActiveModules;
+        public static List<ACAvatar> Avatars;
 
         // Considered temporary.
         public static GameObject AvatarObject;
+        public static RuntimeAnimatorController AvatarController;
         public static string[] SupportedAvatarExtensions = { "glb", "vrm" };
 
         // Required startup call, returns true if service is ok.
         public static bool Initialize()
         {
             if (ServiceInitialized) return true;
+
+            Avatars = new List<ACAvatar>();
 
             // Check if the unity client has internet access
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -50,11 +55,15 @@ namespace AvatarConnect
 
             ActiveModules = new List<AvatarConnectModule>();
 
-            // Force add support for generic modules.
-            ActiveModules.Add(new GenericModule());
+            // Load generic animator controller
+            AvatarController = Resources.Load("GenericCharacter") as RuntimeAnimatorController;
+            if (AvatarController == null)
+            {
+                AvatarConnectError.Fail(AvatarConnectError.SERVICE_CONFIG_FAIL);
+                return false;
+            }
 
             ServiceInitialized = true;
-
             return true;
         }
 
@@ -90,15 +99,16 @@ namespace AvatarConnect
         {
             if (!ServiceInitialized) return;
 
-            AvatarRequest request = JsonUtility.FromJson<AvatarRequest>(metadata);
+            // AvatarRequest request = JsonUtility.FromJson<AvatarRequest>(metadata);
+            JObject avatarData = JObject.Parse(metadata);
 
-            if (request == null || request.avatar == null)
+            if (avatarData == null || avatarData["avatar"] == null)
             {
                 AvatarConnectError.Fail(AvatarConnectError.SERVICE_JSON_FAIL);
                 return;
             }
 
-            AvatarConnectModule module = GetModule(request.provider);
+            AvatarConnectModule module = GetModule(avatarData["provider"].ToString());
 
             if (module == null)
             {
@@ -112,13 +122,7 @@ namespace AvatarConnect
                 return;
             }
 
-            if (module.AvatarMetadata == null)
-            {
-                AvatarConnectError.Fail(AvatarConnectError.MODULE_UNSET_METADATA, module);
-                return;
-            }
-
-            module.RequestAvatar(AvatarObject, request);
+            module.RequestAvatar(AvatarObject, avatarData);
         }
 
         // Endpoint for all internal & external errors

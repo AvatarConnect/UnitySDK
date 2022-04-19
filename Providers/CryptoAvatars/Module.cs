@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace CryptoAvatars
 {
-    public class CryptoAvatarsMetadata : AvatarConnect.ProviderMetadata
+    public class CryptoAvatarsMetadata
     {
-        public string type;
     }
 
     // Crypto Avatars AvatarConnect Module
@@ -13,7 +12,7 @@ namespace CryptoAvatars
         public CryptoAvatarsModule()
         {
             ModuleName = "crypto-avatars";
-            AvatarMetadata = new CryptoAvatarsMetadata();
+            AxisInverted = true;
         }
 
         public override AvatarConnect.AvatarConnectResult Activate()

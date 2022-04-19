@@ -7,6 +7,7 @@ namespace AvatarConnect
         // Internal Avatar Connect
         public static string SERVICE_CONNECT_ERROR = "service.connect.error";
         public static string SERVICE_JSON_FAIL = "service.json.fail";
+        public static string SERVICE_CONFIG_FAIL = "service.config.fail";
         public static string INVALID_URL = "invalid.url";
 
         // Module errors

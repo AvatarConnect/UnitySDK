@@ -2,9 +2,8 @@ using UnityEngine;
 
 namespace Meebits
 {
-    public class MeebitsMetadata : AvatarConnect.ProviderMetadata
+    public class MeebitsMetadata
     {
-        public string type;
     }
 
     // Meebits AvatarConnect Module
@@ -13,7 +12,7 @@ namespace Meebits
         public MeebitsModule()
         {
             ModuleName = "meebits";
-            AvatarMetadata = new MeebitsMetadata();
+            TextureFilterMode = FilterMode.Point;
         }
 
         public override AvatarConnect.AvatarConnectResult Activate()
