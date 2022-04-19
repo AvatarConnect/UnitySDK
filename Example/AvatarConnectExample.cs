@@ -27,6 +27,11 @@ public class AvatarConnectExample : MonoBehaviour
         // Activate all modules
         AvatarConnect.Core.ActivateAllModules();
 
+        // Start AvatarConnect
+        AvatarConnect.SDK.InitAvatarConnectSDK();
+
+        AvatarConnect.SDK.EnableAvatarConnectSDK();
+
         // Packet served by the Avatar connect service
 
         // string avatarPacket = "{\"provider\": \"ready-player-me\", \"avatar\": {\"format\": \"glb\",\"uri\": \"https://xxxxxxxxxxxxxx.cloudfront.net/xxxxxxxxxxxxxxxxxxxxxxxxxx.glb?v=83685\", \"type\": \"humanoid\"}, \"metadata\": {\"bodyType\": \"fullbody\",\"outfitGender\": \"xxxxxxxxx\"}}";

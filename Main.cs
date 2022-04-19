@@ -29,6 +29,7 @@ namespace AvatarConnect
 
         // Considered temporary.
         public static GameObject AvatarObject;
+        public static AvatarConnectBridge Bridge;
         public static RuntimeAnimatorController AvatarController;
         public static string[] SupportedAvatarExtensions = { "glb", "vrm" };
 
@@ -38,6 +39,8 @@ namespace AvatarConnect
             if (ServiceInitialized) return true;
 
             Avatars = new List<ACAvatar>();
+
+            Bridge = new GameObject("AvatarConnectBridge").AddComponent<AvatarConnectBridge>();
 
             // Check if the unity client has internet access
             if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -156,11 +159,5 @@ namespace AvatarConnect
 
             return null;
         }
-    }
-
-    // Webgl bridge to javascript, Required to be attached to a root GameObject named "AvatarConnectBridge".
-    public class AvatarConnectBridge : MonoBehaviour
-    {
-
     }
 }
