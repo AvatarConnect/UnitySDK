@@ -1,26 +1,27 @@
 using UnityEngine;
 using System.Runtime.InteropServices;
 
+// Webgl bridge to javascript, Required to be attached to a root GameObject named "AvatarConnectBridge".
+public class AvatarConnectBridge : MonoBehaviour
+{
+    public void HandleClose()
+    {
+        Debug.Log("AvatarConnectBridge: HandleClose");
+    }
+
+    public void HandleError(string error)
+    {
+        Debug.Log("AvatarConnectBridge: HandleError: " + error);
+    }
+
+    public void HandleResult(string result)
+    {
+        AvatarConnect.Core.ReceiveMetadata(result);
+    }
+}
+
 namespace AvatarConnect
 {
-    // Webgl bridge to javascript, Required to be attached to a root GameObject named "AvatarConnectBridge".
-    public class AvatarConnectBridge : MonoBehaviour
-    {
-        public static void HandleClose()
-        {
-            Debug.Log("AvatarConnectBridge: HandleClose");
-        }
-
-        public static void HandleError(string error)
-        {
-            Debug.Log("AvatarConnectBridge: HandleError: " + error);
-        }
-
-        public static void HandleResult(string result)
-        {
-            Core.ReceiveMetadata(result);
-        }
-    }
 
     // SDK bindings
     public static class SDK
