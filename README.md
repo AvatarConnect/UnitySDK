@@ -7,9 +7,7 @@ Learn more about AvatarConnect http://avatarconnect.org/
 
 This repo uses git submodules; when you first clone this repo, run the following commands from within this repo folder:
 
-`git submodule init`
-
-`git submodule update`
+`git submodule update --init --recursive`
 
 Required Unity Project settings:
 
