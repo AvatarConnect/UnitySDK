@@ -9,6 +9,10 @@ This repo uses git submodules; when you first clone this repo, run the following
 
 `git submodule update --init --recursive`
 
+To update to the latest changes:
+
+`git pull --recurse-submodules`
+
 Required Unity Project settings:
 
 `Player / Other Settings / Script Compilation / Allow 'unsafe' Code -> true`
