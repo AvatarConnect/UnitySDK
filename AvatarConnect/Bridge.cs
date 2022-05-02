@@ -26,7 +26,7 @@ namespace AvatarConnect
     // SDK bindings
     public static class SDK
     {
-#if UNITY_WEBGL
+#if !UNITY_EDITOR && UNITY_WEBGL
         [DllImport("__Internal")]
         public static extern void InitAvatarConnectSDK();
         [DllImport("__Internal")]
